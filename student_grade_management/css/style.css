@@ -1,0 +1,23 @@
+/* Thiết lập chung cho toàn bộ dự án */
+:root {
+    --primary: #4a6cf7;
+    --primary-hover: #3b5ad9;
+    --danger: #ea5455;
+    --dark: #2b2c40;
+    --gray-bg: #f8f9fa;
+    --border-color: #dbdade;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    
+    /* ĐỔI DÒNG NÀY: Dùng font Chelsea Market mới lấy về */
+    font-family: "Chelsea Market", system-ui;
+}
+
+body {
+    background-color: var(--gray-bg);
+    color: var(--dark);
+}

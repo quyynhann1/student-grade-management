@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Lớp Chủ Nhiệm - THPT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="logo"><h3>SỔ LỚP THPT</h3></div>
+        <div class="user-profile">
+            <span id="welcomeText">Xin chào, GVCN!</span>
+            <button id="btnLogout" class="btn-logout">Đăng Xuất</button>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <p id="classBadge" class="class-badge">Lớp chủ nhiệm: —</p>
+            <ul class="menu-list">
+                <li class="menu-item active" data-view="students"><a href="#">Học sinh lớp tôi</a></li>
+                <li class="menu-item" data-view="homeroom"><a href="#">Thông tin lớp</a></li>
+                <li class="menu-item" data-view="grades"><a href="#">Bảng điểm</a></li>
+                <li class="menu-item" data-view="statistics"><a href="#">Thống kê lớp</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <!-- Học sinh -->
+            <section id="view-students" class="view-panel active">
+                <div class="content-header">
+                    <h2>Học Sinh Lớp Chủ Nhiệm</h2>
+                    <p>Quản lý danh sách và nhập điểm học sinh lớp bạn</p>
+                </div>
+                <div class="workspace">
+                    <div class="card form-card">
+                        <h3 id="formTitle">Thêm Học Sinh Mới</h3>
+                        <form id="studentForm">
+                            <input type="hidden" id="studentId">
+                            <div class="form-group">
+                                <label for="studentName">Họ và Tên</label>
+                                <input type="text" id="studentName" required placeholder="Nguyễn Văn A">
+                            </div>
+                            <div class="form-group">
+                                <label for="studentPhone">SĐT phụ huynh</label>
+                                <input type="text" id="studentPhone" placeholder="0912345678">
+                            </div>
+                            <p id="studentFormError" class="form-error"></p>
+                            <div class="form-actions">
+                                <button type="submit" id="btnSubmitForm" class="btn-submit">Lưu Học Sinh</button>
+                                <button type="button" id="btnCancelEdit" class="btn-cancel" style="display:none">Hủy</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card table-card">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Mã</th><th>Họ Tên</th><th>SĐT</th><th>Điểm</th>
+                                    <th>ĐTB</th><th>Học lực</th><th>Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Lớp chủ nhiệm -->
+            <section id="view-homeroom" class="view-panel">
+                <div class="content-header">
+                    <h2>Thông Tin Lớp Chủ Nhiệm</h2>
+                    <p>Cập nhật thông tin lớp bạn đang phụ trách</p>
+                </div>
+                <div class="card form-card" style="max-width:450px">
+                    <form id="homeroomForm">
+                        <div class="form-group">
+                            <label for="homeroomCode">Mã lớp</label>
+                            <input type="text" id="homeroomCode" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="homeroomName">Tên lớp</label>
+                            <input type="text" id="homeroomName" required placeholder="Lớp 12A1">
+                        </div>
+                        <div class="form-group">
+                            <label for="homeroomGrade">Khối</label>
+                            <input type="text" id="homeroomGrade" placeholder="12">
+                        </div>
+                        <div class="form-group">
+                            <label for="homeroomYear">Năm học</label>
+                            <input type="text" id="homeroomYear" placeholder="2025 - 2026">
+                        </div>
+                        <p class="info-text">Sĩ số hiện tại: <strong id="homeroomCount">0</strong> học sinh</p>
+                        <p id="homeroomFormError" class="form-error"></p>
+                        <button type="submit" class="btn-submit">Lưu Thông Tin</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Bảng điểm -->
+            <section id="view-grades" class="view-panel">
+                <div class="content-header">
+                    <h2>Bảng Điểm Lớp</h2>
+                    <p>Điểm Toán, Ngữ văn, Tiếng Anh — HK1</p>
+                </div>
+                <div class="card table-card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mã</th><th>Họ Tên</th>
+                                <th>Toán</th><th>Ngữ văn</th><th>T.Anh</th><th>ĐTB</th><th>Học lực</th>
+                            </tr>
+                        </thead>
+                        <tbody id="gradeTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Thống kê -->
+            <section id="view-statistics" class="view-panel">
+                <div class="content-header">
+                    <h2>Thống Kê Lớp Chủ Nhiệm</h2>
+                    <p>Báo cáo nhanh kết quả học tập lớp bạn</p>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card"><span>Sĩ số</span><strong id="statStudents">0</strong></div>
+                    <div class="stat-card"><span>Lớp</span><strong id="statHomeroom">—</strong></div>
+                    <div class="stat-card"><span>Đã nhập điểm</span><strong id="statGraded">0</strong></div>
+                    <div class="stat-card"><span>ĐTB lớp</span><strong id="statAvgGpa">0</strong></div>
+                </div>
+                <div class="workspace" style="margin-top:20px">
+                    <div class="card table-card">
+                        <h3 style="margin-bottom:15px">Phân loại học lực</h3>
+                        <table>
+                            <thead><tr><th>Học lực</th><th>Số lượng</th></tr></thead>
+                            <tbody id="rankTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="card table-card">
+                        <h3 style="margin-bottom:15px">Top 5 học sinh giỏi</h3>
+                        <table>
+                            <thead><tr><th>#</th><th>Họ Tên</th><th>ĐTB</th><th>Học lực</th></tr></thead>
+                            <tbody id="topStudentBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="gradeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="gradeModalTitle">Nhập Điểm</h3>
+                <span id="btnCloseModal" class="close-btn">&times;</span>
+            </div>
+            <form id="gradeForm" novalidate>
+                <input type="hidden" id="gradeStudentId">
+                <div class="form-group">
+                    <label for="scoreMath">Điểm Toán (0 – 10)</label>
+                    <input type="number" id="scoreMath" min="0" max="10" step="0.1" required placeholder="0 – 10">
+                </div>
+                <div class="form-group">
+                    <label for="scoreLiterature">Điểm Ngữ văn (0 – 10)</label>
+                    <input type="number" id="scoreLiterature" min="0" max="10" step="0.1" required placeholder="0 – 10">
+                </div>
+                <div class="form-group">
+                    <label for="scoreEnglish">Điểm Tiếng Anh (0 – 10)</label>
+                    <input type="number" id="scoreEnglish" min="0" max="10" step="0.1" required placeholder="0 – 10">
+                </div>
+                <p id="gradeFormError" class="form-error"></p>
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">Lưu Điểm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
