@@ -4,6 +4,7 @@ import ClassManager from '../classes/classes.js';
 import Statistics from '../statistics/statistics.js';
 
 export const UIRenderer = {
+    // 1. RENDER BẢNG HỌC SINH (TAB 1)
     renderStudentTable(onEdit, onDelete, onInputGrade) {
         const tableBody = document.getElementById('studentTableBody');
         if (!tableBody) return;
@@ -41,6 +42,7 @@ export const UIRenderer = {
             tableBody.appendChild(tr);
         }
 
+        // Gắn sự kiện cho các nút hành động
         document.querySelectorAll('.btn-table-edit').forEach(btn => {
             btn.addEventListener('click', () => onEdit(btn.dataset.id));
         });
@@ -52,6 +54,7 @@ export const UIRenderer = {
         });
     },
 
+    // 2. LOAD THÔNG TIN LỚP CHỦ NHIỆM (TAB 2)
     loadHomeroomInfo(classId) {
         const cls = ClassManager.getHomeroomClass(classId);
         if (!cls) return;
@@ -70,12 +73,18 @@ export const UIRenderer = {
         if (countEl) countEl.textContent = ClassManager.countStudents(classId);
     },
 
+    // 3. RENDER BẢNG ĐIỂM CHI TIẾT (TAB 3)
     renderGradeTable() {
         const tableBody = document.getElementById('gradeTableBody');
         if (!tableBody) return;
 
         const students = StudentManager.getAll();
         tableBody.innerHTML = '';
+
+        if (students.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center">Chưa có dữ liệu học sinh</td></tr>';
+            return;
+        }
 
         for (let i = 0; i < students.length; i++) {
             const student = students[i];
@@ -85,7 +94,7 @@ export const UIRenderer = {
 
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td>${student.id}</td>
+                <td><strong>${student.id}</strong></td>
                 <td>${student.name}</td>
                 <td>${grade.math}</td>
                 <td>${grade.literature}</td>
@@ -97,6 +106,7 @@ export const UIRenderer = {
         }
     },
 
+    // 4. RENDER THỐNG KÊ BÁO CÁO & TOP HỌC SINH (TAB 4)
     renderStatistics(homeroomClass) {
         const overview = Statistics.getOverview(homeroomClass);
         const el = (id) => document.getElementById(id);
@@ -106,33 +116,40 @@ export const UIRenderer = {
         if (el('statGraded')) el('statGraded').textContent = overview.totalGraded;
         if (el('statAvgGpa')) el('statAvgGpa').textContent = overview.averageGpa;
 
+        // Vẽ bảng số lượng phân loại học lực
         const rankBody = document.getElementById('rankTableBody');
         if (rankBody) {
             rankBody.innerHTML = '';
             const ranks = ['Giỏi', 'Khá', 'Trung Bình', 'Yếu'];
             for (let i = 0; i < ranks.length; i++) {
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${ranks[i]}</td><td>${overview.rankCounts[ranks[i]]} học sinh</td>`;
+                tr.innerHTML = `
+                    <td><span class="badge-rank ${ranks[i]}">${ranks[i]}</span></td>
+                    <td><strong>${overview.rankCounts[ranks[i]]}</strong> học sinh</td>
+                `;
                 rankBody.appendChild(tr);
             }
         }
 
+        // Vẽ bảng Top 5 học sinh giỏi nhất lớp
         const topBody = document.getElementById('topStudentBody');
         if (topBody) {
             const top = Statistics.getTopStudents(5);
             topBody.innerHTML = '';
+            
             for (let i = 0; i < top.length; i++) {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${i + 1}</td>
+                    <td><strong>${i + 1}</strong></td>
                     <td>${top[i].name}</td>
                     <td><span class="badge-gpa">${top[i].gpa}</span></td>
                     <td><span class="badge-rank ${top[i].rank}">${top[i].rank}</span></td>
                 `;
                 topBody.appendChild(tr);
             }
+            
             if (top.length === 0) {
-                topBody.innerHTML = '<tr><td colspan="4" style="text-align:center">Chưa có dữ liệu</td></tr>';
+                topBody.innerHTML = '<tr><td colspan="4" style="text-align:center">Chưa có dữ liệu thống kê</td></tr>';
             }
         }
     }

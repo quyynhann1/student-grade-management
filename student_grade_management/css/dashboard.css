@@ -369,3 +369,39 @@ table tr:hover {
 .close-btn:hover {
     color: var(--danger);
 }
+
+/* Style cho tab nội dung và các thẻ widget báo cáo */
+.tab-content {
+    animation: fadeIn 0.2s ease;
+}
+
+.report-widgets {
+    display: flex;
+    gap: 20px;
+}
+
+.widget-card {
+    flex: 1;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    border-left: 5px solid #a8aaad;
+}
+
+.widget-card h4 {
+    color: #6f6b7d;
+    font-size: 14px;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.widget-card h2 {
+    font-size: 28px;
+    color: #5d596c;
+}
+
+/* Đổi màu sắc cho từng loại thẻ số liệu */
+.widget-card.unique-students { border-left-color: var(--primary); }
+.widget-card.status-good { border-left-color: #28a745; }
+.widget-card.status-normal { border-left-color: #ff9f43; }

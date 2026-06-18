@@ -12,6 +12,7 @@
 </head>
 <body>
 
+    <!-- THANH NAVBAR TRÊN CÙNG -->
     <header class="top-navbar">
         <div class="logo"><h3>SỔ LỚP THPT</h3></div>
         <div class="user-profile">
@@ -21,6 +22,7 @@
     </header>
 
     <div class="dashboard-container">
+        <!-- THANH MENU SIDEBAR BÊN TRÁI -->
         <aside class="sidebar">
             <p id="classBadge" class="class-badge">Lớp chủ nhiệm: —</p>
             <ul class="menu-list">
@@ -31,14 +33,17 @@
             </ul>
         </aside>
 
+        <!-- KHU VỰC HIỂN THỊ NỘI DUNG CHÍNH (MAIN CONTENT) -->
         <main class="main-content">
-            <!-- Học sinh -->
+            
+            <!-- VIEW 1: HỌC SINH LỚP TÔI -->
             <section id="view-students" class="view-panel active">
                 <div class="content-header">
                     <h2>Học Sinh Lớp Chủ Nhiệm</h2>
                     <p>Quản lý danh sách và nhập điểm học sinh lớp bạn</p>
                 </div>
                 <div class="workspace">
+                    <!-- Form thêm/sửa học sinh bên trái -->
                     <div class="card form-card">
                         <h3 id="formTitle">Thêm Học Sinh Mới</h3>
                         <form id="studentForm">
@@ -58,12 +63,18 @@
                             </div>
                         </form>
                     </div>
+                    <!-- Bảng danh sách học sinh bên phải -->
                     <div class="card table-card">
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Mã</th><th>Họ Tên</th><th>SĐT</th><th>Điểm</th>
-                                    <th>ĐTB</th><th>Học lực</th><th>Hành động</th>
+                                    <th>Mã</th>
+                                    <th>Họ Tên</th>
+                                    <th>SĐT</th>
+                                    <th>Điểm Toán-Văn-Anh</th>
+                                    <th>ĐTB</th>
+                                    <th>Học lực</th>
+                                    <th style="text-align: center; width: 180px;">Hành động</th>
                                 </tr>
                             </thead>
                             <tbody id="studentTableBody"></tbody>
@@ -72,8 +83,8 @@
                 </div>
             </section>
 
-            <!-- Lớp chủ nhiệm -->
-            <section id="view-homeroom" class="view-panel">
+            <!-- VIEW 2: THÔNG TIN LỚP CHỦ NHIỆM -->
+            <section id="view-homeroom" class="view-panel" style="display:none">
                 <div class="content-header">
                     <h2>Thông Tin Lớp Chủ Nhiệm</h2>
                     <p>Cập nhật thông tin lớp bạn đang phụ trách</p>
@@ -103,8 +114,8 @@
                 </div>
             </section>
 
-            <!-- Bảng điểm -->
-            <section id="view-grades" class="view-panel">
+            <!-- VIEW 3: BẢNG ĐIỂM CHI TIẾT -->
+            <section id="view-grades" class="view-panel" style="display:none">
                 <div class="content-header">
                     <h2>Bảng Điểm Lớp</h2>
                     <p>Điểm Toán, Ngữ văn, Tiếng Anh — HK1</p>
@@ -113,8 +124,13 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Mã</th><th>Họ Tên</th>
-                                <th>Toán</th><th>Ngữ văn</th><th>T.Anh</th><th>ĐTB</th><th>Học lực</th>
+                                <th style="width: 80px;">Mã</th>
+                                <th>Họ Tên</th>
+                                <th>Điểm Toán</th>
+                                <th>Điểm Ngữ văn</th>
+                                <th>Điểm Tiếng Anh</th>
+                                <th>ĐTB môn</th>
+                                <th>Học lực</th>
                             </tr>
                         </thead>
                         <tbody id="gradeTableBody"></tbody>
@@ -122,30 +138,36 @@
                 </div>
             </section>
 
-            <!-- Thống kê -->
-            <section id="view-statistics" class="view-panel">
+            <!-- VIEW 4: THỐNG KÊ LỚP -->
+            <section id="view-statistics" class="view-panel" style="display:none">
                 <div class="content-header">
                     <h2>Thống Kê Lớp Chủ Nhiệm</h2>
                     <p>Báo cáo nhanh kết quả học tập lớp bạn</p>
                 </div>
+                <!-- Khối thẻ Widget tóm tắt số liệu -->
                 <div class="stats-grid">
                     <div class="stat-card"><span>Sĩ số</span><strong id="statStudents">0</strong></div>
                     <div class="stat-card"><span>Lớp</span><strong id="statHomeroom">—</strong></div>
                     <div class="stat-card"><span>Đã nhập điểm</span><strong id="statGraded">0</strong></div>
                     <div class="stat-card"><span>ĐTB lớp</span><strong id="statAvgGpa">0</strong></div>
                 </div>
+                <!-- 2 Bảng thống kê chi tiết phía dưới -->
                 <div class="workspace" style="margin-top:20px">
                     <div class="card table-card">
                         <h3 style="margin-bottom:15px">Phân loại học lực</h3>
                         <table>
-                            <thead><tr><th>Học lực</th><th>Số lượng</th></tr></thead>
+                            <thead>
+                                <tr><th>Học lực</th><th>Số lượng học sinh</th></tr>
+                            </thead>
                             <tbody id="rankTableBody"></tbody>
                         </table>
                     </div>
                     <div class="card table-card">
-                        <h3 style="margin-bottom:15px">Top 5 học sinh giỏi</h3>
+                        <h3 style="margin-bottom:15px">Top 5 học sinh xuất sắc</h3>
                         <table>
-                            <thead><tr><th>#</th><th>Họ Tên</th><th>ĐTB</th><th>Học lực</th></tr></thead>
+                            <thead>
+                                <tr><th>#</th><th>Họ Tên</th><th>ĐTB</th><th>Học lực</th></tr>
+                            </thead>
                             <tbody id="topStudentBody"></tbody>
                         </table>
                     </div>
@@ -154,6 +176,7 @@
         </main>
     </div>
 
+    <!-- HỘP THOẠI POPUP NHẬP ĐIỂM (MODAL) -->
     <div id="gradeModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -163,16 +186,16 @@
             <form id="gradeForm" novalidate>
                 <input type="hidden" id="gradeStudentId">
                 <div class="form-group">
-                    <label for="scoreMath">Điểm Toán (0 – 10)</label>
-                    <input type="number" id="scoreMath" min="0" max="10" step="0.1" required placeholder="0 – 10">
+                    <label for="scoreMath">Điểm Toán (0 - 10)</label>
+                    <input type="number" id="scoreMath" min="0" max="10" step="0.1" required placeholder="0 - 10">
                 </div>
                 <div class="form-group">
-                    <label for="scoreLiterature">Điểm Ngữ văn (0 – 10)</label>
-                    <input type="number" id="scoreLiterature" min="0" max="10" step="0.1" required placeholder="0 – 10">
+                    <label for="scoreLiterature">Điểm Ngữ văn (0 - 10)</label>
+                    <input type="number" id="scoreLiterature" min="0" max="10" step="0.1" required placeholder="0 - 10">
                 </div>
                 <div class="form-group">
-                    <label for="scoreEnglish">Điểm Tiếng Anh (0 – 10)</label>
-                    <input type="number" id="scoreEnglish" min="0" max="10" step="0.1" required placeholder="0 – 10">
+                    <label for="scoreEnglish">Điểm Tiếng Anh (0 - 10)</label>
+                    <input type="number" id="scoreEnglish" min="0" max="10" step="0.1" required placeholder="0 - 10">
                 </div>
                 <p id="gradeFormError" class="form-error"></p>
                 <div class="form-actions">
@@ -182,6 +205,7 @@
         </div>
     </div>
 
+    <!-- KẾT NỐI FILE ĐIỀU KHIỂN CHÍNH -->
     <script type="module" src="js/main.js"></script>
 </body>
 </html>
