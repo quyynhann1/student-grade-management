@@ -34,18 +34,29 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Nếu không có studentForm (đang ở trang login) thì dừng lại, không chạy tiếp code dashboard
+    // Nếu không có studentForm (đang ở trang login) thì dừng lại
     const studentForm = document.getElementById('studentForm');
     if (!studentForm) return;
 
-    // Lấy thông tin giáo viên và lớp chủ nhiệm hiện tại
     const currentUser = Auth.getCurrentUser();
-    const homeroomClass = currentUser ? currentUser.homeroomClass : '';
+    const teacherName = currentUser?.name || currentUser?.username || 'Nguyễn Quý Nhân';
+    const homeroomClass = currentUser?.homeroomClass || '12A1';
 
-    if (currentUser) {
-        document.getElementById('welcomeText').innerText = `GVCN: ${currentUser.name} — Lớp ${homeroomClass}`;
-        document.getElementById('classBadge').innerText = `Lớp chủ nhiệm: ${homeroomClass}`;
+    // Cập nhật thông tin lên thanh tiêu đề và sidebar thanh điều hướng
+    const welcomeTextEl = document.getElementById('welcomeText');
+    const classBadgeEl = document.getElementById('classBadge');
+    const classMenuLinkEl = document.querySelector('.menu-list .class-badge');
+
+    if (welcomeTextEl) {
+        welcomeTextEl.innerText = `GVCN: ${teacherName} — Lớp ${homeroomClass}`;
     }
+    if (classBadgeEl) {
+        classBadgeEl.innerText = `Lớp chủ nhiệm: ${homeroomClass}`;
+    }
+    if (classMenuLinkEl) {
+        classMenuLinkEl.innerText = `Lớp chủ nhiệm: ${homeroomClass}`;
+    }
+
     document.getElementById('btnLogout').addEventListener('click', () => Auth.logout());
 
     const gradeModal = document.getElementById('gradeModal');
@@ -61,19 +72,18 @@ document.addEventListener('DOMContentLoaded', () => {
         views.forEach(v => {
             if (v.id === 'view-' + viewName) {
                 v.classList.add('active');
-                v.style.display = 'block'; // Hiện tab được chọn
+                v.style.display = 'block';
             } else {
                 v.classList.remove('active');
-                v.style.display = 'none';  // Ẩn hoàn toàn các tab còn lại
+                v.style.display = 'none';
             }
         });
 
-        // Gọi các hàm render tương ứng khi chuyển tab
         if (viewName === 'students') reloadStudentTable();
         if (viewName === 'grades') UIRenderer.renderGradeTable();
         if (viewName === 'statistics') UIRenderer.renderStatistics(homeroomClass);
         if (viewName === 'homeroom') UIRenderer.loadHomeroomInfo(homeroomClass);
-        if (viewName === 'schedule') renderScheduleTable(); // Gọi render Thời khóa biểu động
+        if (viewName === 'schedule') renderScheduleTable();
     }
 
     menuItems.forEach(item => {
@@ -83,12 +93,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Hàm tải lại bảng học sinh ở Tab 1
     const reloadStudentTable = () => {
         UIRenderer.renderStudentTable(handleEditClick, handleDeleteClick, handleGradeClick);
     };
 
-    // --- 3. XỬ LÝ MODAL NHẬP ĐIỂM (TOÁN - VĂN - ANH) ---
+    // --- 3. XỬ LÝ MODAL NHẬP ĐIỂM ---
     const handleGradeClick = (studentId) => {
         const student = StudentManager.getById(studentId);
         const currentGrade = GradeManager.getByStudentId(studentId);
@@ -107,11 +116,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Đóng hộp thoại điểm
     document.getElementById('btnCloseModal').addEventListener('click', () => gradeModal.style.display = 'none');
     window.addEventListener('click', (e) => { if (e.target === gradeModal) gradeModal.style.display = 'none'; });
 
-    // Kiểm tra điểm số trực tiếp khi người dùng gõ nhập liệu
     ['scoreMath', 'scoreLiterature', 'scoreEnglish'].forEach(id => {
         const input = document.getElementById(id);
         input.addEventListener('input', () => {
@@ -121,7 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Lưu điểm số khi ấn Submit Form
     document.getElementById('gradeForm').addEventListener('submit', (e) => {
         e.preventDefault();
         const grades = {
@@ -143,11 +149,15 @@ document.addEventListener('DOMContentLoaded', () => {
         reloadStudentTable();
     });
 
-    // --- 4. XỬ LÝ CRUD HỌC SINH (THÊM / SỬA / XÓA) ---
+    // --- 4. XỬ LÝ CRUD HỌC SINH (CHẾ ĐỘ TỰ NHẬP MÃ) ---
     const handleEditClick = (id) => {
         const student = StudentManager.getById(id);
         if (student) {
             document.getElementById('studentId').value = student.id;
+            // KHÓA ô mã học sinh lại, không cho sửa mã khi cập nhật thông tin
+            document.getElementById('studentId').setAttribute('readonly', true);
+            document.getElementById('studentId').style.backgroundColor = '#f8f9fa';
+            
             document.getElementById('studentName').value = student.name;
             document.getElementById('studentPhone').value = student.phone || '';
             document.getElementById('formTitle').innerText = 'Cập Nhật Học Sinh';
@@ -167,6 +177,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const resetStudentForm = () => {
         studentForm.reset();
+        // MỞ KHÓA lại ô nhập mã học sinh để có thể điền mã cho học sinh mới tiếp theo
+        document.getElementById('studentId').removeAttribute('readonly');
+        document.getElementById('studentId').style.backgroundColor = '';
+        
         document.getElementById('studentId').value = '';
         document.getElementById('formTitle').innerText = 'Thêm Học Sinh Mới';
         document.getElementById('btnSubmitForm').innerText = 'Lưu Học Sinh';
@@ -178,43 +192,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
     studentForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        const id = document.getElementById('studentId').value;
+        const id = document.getElementById('studentId').value.trim();
         const data = {
+            id: id,
             name: document.getElementById('studentName').value.trim(),
             phone: document.getElementById('studentPhone').value.trim(),
             classId: homeroomClass
         };
+        
         const check = validateStudentForm(data);
         if (!check.valid) {
             document.getElementById('studentFormError').innerText = check.errors.join(', ');
             return;
         }
-        if (id) StudentManager.update(id, data);
-        else StudentManager.create(data);
+
+        const isEdit = document.getElementById('studentId').hasAttribute('readonly');
+        
+        if (isEdit) {
+            StudentManager.update(id, data);
+        } else {
+            // Kiểm tra trùng lặp mã trước khi tạo mới
+            if (StudentManager.getById(id)) {
+                document.getElementById('studentFormError').innerText = 'Mã học sinh này đã tồn tại trong hệ thống!';
+                return;
+            }
+            StudentManager.create(data);
+        }
         
         reloadStudentTable();
         resetStudentForm();
         UIRenderer.loadHomeroomInfo(homeroomClass);
     });
 
-    // --- 5. CẬP NHẬT THÔNG TIN LỚP CHỦ NHIỆM ---
-    document.getElementById('homeroomForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const name = document.getElementById('homeroomName').value.trim();
-        const grade = document.getElementById('homeroomGrade').value.trim();
-        const schoolYear = document.getElementById('homeroomYear').value.trim();
-
-        const nameCheck = validateClassName(name);
-        if (!nameCheck.valid) {
-            document.getElementById('homeroomFormError').innerText = nameCheck.message;
-            return;
-        }
-
-        ClassManager.updateHomeroom(homeroomClass, { name, grade, schoolYear });
-        document.getElementById('homeroomFormError').innerText = '';
-        alert('Đã cập nhật thông tin lớp thành công!');
-        UIRenderer.loadHomeroomInfo(homeroomClass);
-    });
+    // --- 5. THÔNG TIN LỚP CHỦ NHIỆM (CHẾ ĐỘ CHỈ XEM) ---
+    // Đã chuyển form sang chế độ readonly ở HTML, không xử lý sự kiện submit lưu dữ liệu nữa.
 
     // --- 6. XỬ LÝ THỜI KHÓA BIỂU ĐỘNG VÀ SỬA TRỰC TIẾP ---
     let isEditingSchedule = false;
@@ -225,7 +236,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!tbody) return;
         tbody.innerHTML = '';
 
-        // Vòng lặp kết xuất từ Tiết 1 đến Tiết 5
         for (let i = 0; i < 5; i++) {
             const tr = document.createElement('tr');
             let rowHTML = `<td style="text-align: center;"><strong>Tiết ${i + 1}</strong></td>`;
@@ -274,7 +284,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Khởi chạy dữ liệu mặc định lúc tải trang
     reloadStudentTable();
     UIRenderer.loadHomeroomInfo(homeroomClass);
 });

@@ -20,6 +20,17 @@ export function validatePassword(password) {
     return { valid: true, message: '' };
 }
 
+// Hàm mới: Kiểm tra mã học sinh hợp lệ
+export function validateStudentId(id) {
+    if (!id || id.trim() === '') {
+        return { valid: false, message: 'Mã học sinh không được để trống' };
+    }
+    if (id.trim().length < 2) {
+        return { valid: false, message: 'Mã học sinh phải có ít nhất 2 ký tự' };
+    }
+    return { valid: true, message: '' };
+}
+
 export function validateStudentName(name) {
     if (!name || name.trim().length < 2) {
         return { valid: false, message: 'Họ tên phải có ít nhất 2 ký tự' };
@@ -59,11 +70,15 @@ export function validatePhone(phone) {
     return { valid: true, message: '' };
 }
 
+// Cập nhật hàm này để kiểm tra đồng thời cả ID, Tên và SĐT
 export function validateStudentForm(data) {
     const errors = [];
+    
+    const idCheck = validateStudentId(data.id);
     const nameCheck = validateStudentName(data.name);
     const phoneCheck = validatePhone(data.phone);
 
+    if (!idCheck.valid) errors.push(idCheck.message);
     if (!nameCheck.valid) errors.push(nameCheck.message);
     if (!phoneCheck.valid) errors.push(phoneCheck.message);
 

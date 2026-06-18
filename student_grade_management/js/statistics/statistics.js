@@ -1,6 +1,5 @@
 import StudentManager from '../students/students.js';
 import GradeManager from '../grades/grades.js';
-import ClassManager from '../classes/classes.js';
 
 const Statistics = {
     getOverview(homeroomClass) {

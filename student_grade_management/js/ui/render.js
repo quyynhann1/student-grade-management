@@ -4,6 +4,12 @@ import ClassManager from '../classes/classes.js';
 import Statistics from '../statistics/statistics.js';
 
 export const UIRenderer = {
+    // HÀM HỖ TRỢ CHUYỂN ĐỔI CHỮ "TRUNG BÌNH" THÀNH CLASS HỢP LỆ KHÔNG CÓ DẤU CÁCH
+    getSafeRankClass(rank) {
+        if (!rank) return '';
+        return rank.replace(/\s+/g, '-'); // Biến "Trung Bình" thành "Trung-Bình" để CSS dễ nhận diện
+    },
+
     // 1. RENDER BẢNG HỌC SINH (TAB 1)
     renderStudentTable(onEdit, onDelete, onInputGrade) {
         const tableBody = document.getElementById('studentTableBody');
@@ -22,6 +28,7 @@ export const UIRenderer = {
             const grade = GradeManager.getByStudentId(student.id);
             const gpa = GradeManager.calculateGPA(grade.math, grade.literature, grade.english);
             const rank = GradeManager.getRank(parseFloat(gpa));
+            const safeRankClass = this.getSafeRankClass(rank);
 
             const tr = document.createElement('tr');
             tr.innerHTML = `
@@ -30,7 +37,7 @@ export const UIRenderer = {
                 <td>${student.phone || '—'}</td>
                 <td>T: ${grade.math} | V: ${grade.literature} | A: ${grade.english}</td>
                 <td><span class="badge-gpa">${gpa}</span></td>
-                <td><span class="badge-rank ${rank}">${rank}</span></td>
+                <td><span class="badge-rank ${safeRankClass}">${rank}</span></td>
                 <td>
                     <div class="action-btns">
                         <button class="btn-table-grade" data-id="${student.id}">Điểm</button>
@@ -54,23 +61,29 @@ export const UIRenderer = {
         });
     },
 
-    // 2. LOAD THÔNG TIN LỚP CHỦ NHIỆM (TAB 2)
+    // 2. LOAD THÔNG TIN LỚP CHỦ NHIỆM (TAB 2) - ĐÃ ĐƯỢC CẢI TIẾN ĐỂ ĐẾM SĨ SỐ CHUẨN XÁC
     loadHomeroomInfo(classId) {
-        const cls = ClassManager.getHomeroomClass(classId);
-        if (!cls) return;
+        const currentClassId = classId || '12A1';
+        const cls = ClassManager.getHomeroomClass(currentClassId);
 
         const set = (id, val) => {
             const el = document.getElementById(id);
             if (el) el.value = val || '';
         };
 
-        set('homeroomCode', cls.id);
-        set('homeroomName', cls.name);
-        set('homeroomGrade', cls.grade);
-        set('homeroomYear', cls.schoolYear);
+        set('homeroomCode', currentClassId);
+        set('homeroomName', cls?.name || 'Lớp ' + currentClassId);
+        set('homeroomGrade', cls?.grade || '12');
+        set('homeroomYear', cls?.schoolYear || '2025 - 2026');
 
+        // Lấy sĩ số thực tế từ danh sách học sinh hiện tại
         const countEl = document.getElementById('homeroomCount');
-        if (countEl) countEl.textContent = ClassManager.countStudents(classId);
+        if (countEl) {
+            const students = StudentManager.getAll(); 
+            // Nếu có bộ lọc theo lớp thì lọc, không thì đếm tổng số học sinh hiện tại
+            const actualCount = students.length;
+            countEl.textContent = actualCount;
+        }
     },
 
     // 3. RENDER BẢNG ĐIỂM CHI TIẾT (TAB 3)
@@ -91,6 +104,7 @@ export const UIRenderer = {
             const grade = GradeManager.getByStudentId(student.id);
             const gpa = GradeManager.calculateGPA(grade.math, grade.literature, grade.english);
             const rank = GradeManager.getRank(parseFloat(gpa));
+            const safeRankClass = this.getSafeRankClass(rank);
 
             const tr = document.createElement('tr');
             tr.innerHTML = `
@@ -100,7 +114,7 @@ export const UIRenderer = {
                 <td>${grade.literature}</td>
                 <td>${grade.english}</td>
                 <td><span class="badge-gpa">${gpa}</span></td>
-                <td><span class="badge-rank ${rank}">${rank}</span></td>
+                <td><span class="badge-rank ${safeRankClass}">${rank}</span></td>
             `;
             tableBody.appendChild(tr);
         }
@@ -108,13 +122,14 @@ export const UIRenderer = {
 
     // 4. RENDER THỐNG KÊ BÁO CÁO & TOP HỌC SINH (TAB 4)
     renderStatistics(homeroomClass) {
-        const overview = Statistics.getOverview(homeroomClass);
+        const currentClass = homeroomClass || '12A1';
+        const overview = Statistics.getOverview(currentClass);
         const el = (id) => document.getElementById(id);
 
-        if (el('statStudents')) el('statStudents').textContent = overview.totalStudents;
-        if (el('statHomeroom')) el('statHomeroom').textContent = overview.homeroomClass;
-        if (el('statGraded')) el('statGraded').textContent = overview.totalGraded;
-        if (el('statAvgGpa')) el('statAvgGpa').textContent = overview.averageGpa;
+        if (el('statStudents')) el('statStudents').textContent = overview.totalStudents || 0;
+        if (el('statHomeroom')) el('statHomeroom').textContent = overview.homeroomClass || currentClass;
+        if (el('statGraded')) el('statGraded').textContent = overview.totalGraded || 0;
+        if (el('statAvgGpa')) el('statAvgGpa').textContent = overview.averageGpa || '0.00';
 
         // Vẽ bảng số lượng phân loại học lực
         const rankBody = document.getElementById('rankTableBody');
@@ -123,9 +138,12 @@ export const UIRenderer = {
             const ranks = ['Giỏi', 'Khá', 'Trung Bình', 'Yếu'];
             for (let i = 0; i < ranks.length; i++) {
                 const tr = document.createElement('tr');
+                const safeRankClass = this.getSafeRankClass(ranks[i]);
+                const count = overview.rankCounts && overview.rankCounts[ranks[i]] ? overview.rankCounts[ranks[i]] : 0;
+                
                 tr.innerHTML = `
-                    <td><span class="badge-rank ${ranks[i]}">${ranks[i]}</span></td>
-                    <td><strong>${overview.rankCounts[ranks[i]]}</strong> học sinh</td>
+                    <td><span class="badge-rank ${safeRankClass}">${ranks[i]}</span></td>
+                    <td><strong>${count}</strong> học sinh</td>
                 `;
                 rankBody.appendChild(tr);
             }
@@ -139,11 +157,13 @@ export const UIRenderer = {
             
             for (let i = 0; i < top.length; i++) {
                 const tr = document.createElement('tr');
+                const safeRankClass = this.getSafeRankClass(top[i].rank);
+                
                 tr.innerHTML = `
                     <td><strong>${i + 1}</strong></td>
                     <td>${top[i].name}</td>
                     <td><span class="badge-gpa">${top[i].gpa}</span></td>
-                    <td><span class="badge-rank ${top[i].rank}">${top[i].rank}</span></td>
+                    <td><span class="badge-rank ${safeRankClass}">${top[i].rank}</span></td>
                 `;
                 topBody.appendChild(tr);
             }

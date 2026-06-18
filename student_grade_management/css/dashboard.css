@@ -316,9 +316,10 @@ table tr:hover {
     font-size: 12px;
     font-weight: 600;
 }
+/* Màu chuẩn cho các danh hiệu học lực */
 .badge-rank.Giỏi { background-color: rgba(40, 167, 69, 0.1); color: #28a745; }
 .badge-rank.Khá { background-color: rgba(255, 193, 7, 0.1); color: #ff9f43; }
-.badge-rank.Trung\ Bình { background-color: rgba(108, 117, 125, 0.1); color: #6c757d; }
+.badge-rank.Trung-Bình, .badge-rank.Trung { background-color: rgba(108, 117, 125, 0.1); color: #6c757d; }
 .badge-rank.Yếu { background-color: rgba(220, 53, 69, 0.1); color: var(--danger); }
 
 /* Style cho Hộp thoại Popup (Modal) */
@@ -425,4 +426,18 @@ table tr:hover {
 
 .schedule-container tbody tr:hover {
     background-color: #f8f9fa; /* Hiệu ứng highlight nhẹ khi di chuột qua hàng */
+}
+/* Thu nhỏ riêng nút Chỉnh sửa / Lưu thời khóa biểu */
+#btnEditSchedule {
+    flex: none !important; /* KHÓA CHÍNH: Ngăn không cho nút tự dãn dài ra */
+    width: auto !important; /* Ép nút co lại vừa khít chữ */
+    font-size: 13px;       /* Chữ nhỏ lại một chút */
+    padding: 6px 14px;     /* Bóp gọn khoảng cách đệm trên/dưới và trái/phải */
+    height: fit-content;   /* Chiều cao vừa vặn */
+    border-radius: 4px;    /* Bo góc nhẹ cho tinh tế */
+}
+
+#btnEditSchedule:hover {
+    opacity: 0.9;
+    cursor: pointer;
 }

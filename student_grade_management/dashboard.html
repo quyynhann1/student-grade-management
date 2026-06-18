@@ -43,14 +43,17 @@
                     <div class="card form-card">
                         <h3 id="formTitle">Thêm Học Sinh Mới</h3>
                         <form id="studentForm">
-                            <input type="hidden" id="studentId">
+                            <div class="form-group">
+                                <label for="studentId">Mã học sinh</label>
+                                <input type="text" id="studentId" class="form-control" placeholder="Ví dụ: HS4711...">
+                            </div>
                             <div class="form-group">
                                 <label for="studentName">Họ và Tên</label>
-                                <input type="text" id="studentName" required placeholder="Nguyễn Văn A">
+                                <input type="text" id="studentName" class="form-control" placeholder="Nhập họ và tên học sinh...">
                             </div>
                             <div class="form-group">
                                 <label for="studentPhone">SĐT phụ huynh</label>
-                                <input type="text" id="studentPhone" placeholder="0912345678">
+                                <input type="text" id="studentPhone" class="form-control" placeholder="Ví dụ: 0912345678...">
                             </div>
                             <p id="studentFormError" class="form-error"></p>
                             <div class="form-actions">
@@ -81,29 +84,27 @@
             <section id="view-homeroom" class="view-panel" style="display:none">
                 <div class="content-header">
                     <h2>Thông Tin Lớp Chủ Nhiệm</h2>
-                    <p>Cập nhật thông tin lớp bạn đang phụ trách</p>
+                    <p>Hồ sơ tổng quan về lớp học bạn đang phụ trách</p>
                 </div>
                 <div class="card form-card" style="max-width:450px">
                     <form id="homeroomForm">
                         <div class="form-group">
                             <label for="homeroomCode">Mã lớp</label>
-                            <input type="text" id="homeroomCode" disabled>
+                            <input type="text" id="homeroomCode" readonly style="background-color: #f8f9fa; cursor: not-allowed; font-weight: 600;">
                         </div>
                         <div class="form-group">
                             <label for="homeroomName">Tên lớp</label>
-                            <input type="text" id="homeroomName" required placeholder="Lớp 12A1">
+                            <input type="text" id="homeroomName" readonly style="background-color: #f8f9fa; cursor: not-allowed;">
                         </div>
                         <div class="form-group">
                             <label for="homeroomGrade">Khối</label>
-                            <input type="text" id="homeroomGrade" placeholder="12">
+                            <input type="text" id="homeroomGrade" readonly style="background-color: #f8f9fa; cursor: not-allowed;">
                         </div>
                         <div class="form-group">
                             <label for="homeroomYear">Năm học</label>
-                            <input type="text" id="homeroomYear" placeholder="2025 - 2026">
+                            <input type="text" id="homeroomYear" readonly style="background-color: #f8f9fa; cursor: not-allowed;">
                         </div>
-                        <p class="info-text">Sĩ số hiện tại: <strong id="homeroomCount">0</strong> học sinh</p>
-                        <p id="homeroomFormError" class="form-error"></p>
-                        <button type="submit" class="btn-submit">Lưu Thông Tin</button>
+                        <p class="info-text" style="margin-top: 15px; font-size: 15px;">Sĩ số hiện tại: <strong id="homeroomCount" style="color: #4f46e5; font-size: 18px;">0</strong> học sinh</p>
                     </form>
                 </div>
             </section>
@@ -137,7 +138,7 @@
                         <h2>Thời Khóa Biểu Của Lớp</h2>
                         <p>Lịch học các môn trong tuần — Áp dụng cho Học kỳ 1</p>
                     </div>
-                    <button id="btnEditSchedule" class="btn-submit" style="width: auto; padding: 10px 20px; margin: 0;">Chỉnh sửa TKB</button>
+                        <button id="btnEditSchedule" class="btn-submit">Chỉnh sửa TKB</button>
                 </div>
                 <div class="card table-card schedule-container">
                     <table>
@@ -153,7 +154,7 @@
                             </tr>
                         </thead>
                         <tbody id="scheduleTableBody">
-                            </tbody>
+                        </tbody>
                     </table>
                 </div>
             </section>
