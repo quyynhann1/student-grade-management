@@ -405,3 +405,24 @@ table tr:hover {
 .widget-card.unique-students { border-left-color: var(--primary); }
 .widget-card.status-good { border-left-color: #28a745; }
 .widget-card.status-normal { border-left-color: #ff9f43; }
+
+/* Style cho bảng thời khóa biểu */
+.schedule-container table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.schedule-container th, .schedule-container td {
+    border: 1px solid #e6e6e6;
+    padding: 15px 10px;
+    text-align: center;
+}
+
+.schedule-container td:first-child {
+    background-color: #f8f9fa;
+    color: #5d596c;
+}
+
+.schedule-container tbody tr:hover {
+    background-color: #f8f9fa; /* Hiệu ứng highlight nhẹ khi di chuột qua hàng */
+}

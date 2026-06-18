@@ -5,6 +5,7 @@ import ClassManager from './classes/classes.js';
 import GradeManager from './grades/grades.js';
 import { UIRenderer } from './ui/render.js';
 import { validateEmail, validatePassword, validateStudentForm, validateGradeForm, validateClassName, validateScore } from './utils/validate.js';
+import ScheduleManager from './schedule/schedule.js';
 
 // Khởi tạo dữ liệu mẫu và kiểm tra quyền đăng nhập
 initSeedData();
@@ -72,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (viewName === 'grades') UIRenderer.renderGradeTable();
         if (viewName === 'statistics') UIRenderer.renderStatistics(homeroomClass);
         if (viewName === 'homeroom') UIRenderer.loadHomeroomInfo(homeroomClass);
+        if (viewName === 'schedule') renderScheduleTable(); // Gọi render Thời khóa biểu động
     }
 
     menuItems.forEach(item => {
@@ -213,6 +215,64 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('Đã cập nhật thông tin lớp thành công!');
         UIRenderer.loadHomeroomInfo(homeroomClass);
     });
+
+    // --- 6. XỬ LÝ THỜI KHÓA BIỂU ĐỘNG VÀ SỬA TRỰC TIẾP ---
+    let isEditingSchedule = false;
+
+    function renderScheduleTable() {
+        const schedule = ScheduleManager.getSchedule();
+        const tbody = document.getElementById('scheduleTableBody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        // Vòng lặp kết xuất từ Tiết 1 đến Tiết 5
+        for (let i = 0; i < 5; i++) {
+            const tr = document.createElement('tr');
+            let rowHTML = `<td style="text-align: center;"><strong>Tiết ${i + 1}</strong></td>`;
+            const days = ['t2', 't3', 't4', 't5', 't6', 't7'];
+
+            days.forEach(day => {
+                const subject = schedule[day][i] || '—';
+                if (isEditingSchedule) {
+                    rowHTML += `<td><input type="text" class="schedule-input" data-day="${day}" data-period="${i}" value="${subject}" style="width:100%; padding:5px; text-align:center; border:1px solid #ccc; border-radius:4px;"></td>`;
+                } else {
+                    rowHTML += `<td>${subject}</td>`;
+                }
+            });
+
+            tr.innerHTML = rowHTML;
+            tbody.appendChild(tr);
+        }
+    }
+
+    const editScheduleBtn = document.getElementById('btnEditSchedule');
+    if (editScheduleBtn) {
+        editScheduleBtn.addEventListener('click', () => {
+            if (!isEditingSchedule) {
+                isEditingSchedule = true;
+                editScheduleBtn.innerText = 'Lưu Lịch Học';
+                editScheduleBtn.style.backgroundColor = '#28a745';
+                renderScheduleTable();
+            } else {
+                const inputs = document.querySelectorAll('.schedule-input');
+                const currentSchedule = ScheduleManager.getSchedule();
+
+                inputs.forEach(input => {
+                    const day = input.dataset.day;
+                    const period = parseInt(input.dataset.period);
+                    currentSchedule[day][period] = input.value.trim() || '—';
+                });
+
+                ScheduleManager.saveSchedule(currentSchedule);
+
+                isEditingSchedule = false;
+                editScheduleBtn.innerText = 'Chỉnh sửa TKB';
+                editScheduleBtn.style.backgroundColor = '';
+                renderScheduleTable();
+                alert('Đã cập nhật Thời khóa biểu mới thành công!');
+            }
+        });
+    }
 
     // Khởi chạy dữ liệu mặc định lúc tải trang
     reloadStudentTable();

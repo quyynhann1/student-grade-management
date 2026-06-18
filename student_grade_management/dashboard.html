@@ -12,7 +12,6 @@
 </head>
 <body>
 
-    <!-- THANH NAVBAR TRÊN CÙNG -->
     <header class="top-navbar">
         <div class="logo"><h3>SỔ LỚP THPT</h3></div>
         <div class="user-profile">
@@ -22,28 +21,25 @@
     </header>
 
     <div class="dashboard-container">
-        <!-- THANH MENU SIDEBAR BÊN TRÁI -->
         <aside class="sidebar">
             <p id="classBadge" class="class-badge">Lớp chủ nhiệm: —</p>
             <ul class="menu-list">
-                <li class="menu-item active" data-view="students"><a href="#">Học sinh lớp tôi</a></li>
+                <li class="menu-item active" data-view="students"><a href="#">Học sinh lớp</a></li>
                 <li class="menu-item" data-view="homeroom"><a href="#">Thông tin lớp</a></li>
                 <li class="menu-item" data-view="grades"><a href="#">Bảng điểm</a></li>
+                <li class="menu-item" data-view="schedule"><a href="#">Thời khóa biểu</a></li>
                 <li class="menu-item" data-view="statistics"><a href="#">Thống kê lớp</a></li>
             </ul>
         </aside>
 
-        <!-- KHU VỰC HIỂN THỊ NỘI DUNG CHÍNH (MAIN CONTENT) -->
         <main class="main-content">
             
-            <!-- VIEW 1: HỌC SINH LỚP TÔI -->
             <section id="view-students" class="view-panel active">
                 <div class="content-header">
                     <h2>Học Sinh Lớp Chủ Nhiệm</h2>
-                    <p>Quản lý danh sách và nhập điểm học sinh lớp bạn</p>
+                    <p>Quản lý danh sách và nhập điểm học sinh của lớp</p>
                 </div>
                 <div class="workspace">
-                    <!-- Form thêm/sửa học sinh bên trái -->
                     <div class="card form-card">
                         <h3 id="formTitle">Thêm Học Sinh Mới</h3>
                         <form id="studentForm">
@@ -63,7 +59,6 @@
                             </div>
                         </form>
                     </div>
-                    <!-- Bảng danh sách học sinh bên phải -->
                     <div class="card table-card">
                         <table>
                             <thead>
@@ -83,7 +78,6 @@
                 </div>
             </section>
 
-            <!-- VIEW 2: THÔNG TIN LỚP CHỦ NHIỆM -->
             <section id="view-homeroom" class="view-panel" style="display:none">
                 <div class="content-header">
                     <h2>Thông Tin Lớp Chủ Nhiệm</h2>
@@ -114,7 +108,6 @@
                 </div>
             </section>
 
-            <!-- VIEW 3: BẢNG ĐIỂM CHI TIẾT -->
             <section id="view-grades" class="view-panel" style="display:none">
                 <div class="content-header">
                     <h2>Bảng Điểm Lớp</h2>
@@ -138,20 +131,44 @@
                 </div>
             </section>
 
-            <!-- VIEW 4: THỐNG KÊ LỚP -->
+            <section id="view-schedule" class="view-panel" style="display:none">
+                <div class="content-header" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h2>Thời Khóa Biểu Của Lớp</h2>
+                        <p>Lịch học các môn trong tuần — Áp dụng cho Học kỳ 1</p>
+                    </div>
+                    <button id="btnEditSchedule" class="btn-submit" style="width: auto; padding: 10px 20px; margin: 0;">Chỉnh sửa TKB</button>
+                </div>
+                <div class="card table-card schedule-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 100px; text-align: center;">Tiết</th>
+                                <th>Thứ Hai</th>
+                                <th>Thứ Ba</th>
+                                <th>Thứ Tư</th>
+                                <th>Thứ Năm</th>
+                                <th>Thứ Sáu</th>
+                                <th>Thứ Bảy</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scheduleTableBody">
+                            </tbody>
+                    </table>
+                </div>
+            </section>
+
             <section id="view-statistics" class="view-panel" style="display:none">
                 <div class="content-header">
                     <h2>Thống Kê Lớp Chủ Nhiệm</h2>
                     <p>Báo cáo nhanh kết quả học tập lớp bạn</p>
                 </div>
-                <!-- Khối thẻ Widget tóm tắt số liệu -->
                 <div class="stats-grid">
                     <div class="stat-card"><span>Sĩ số</span><strong id="statStudents">0</strong></div>
                     <div class="stat-card"><span>Lớp</span><strong id="statHomeroom">—</strong></div>
                     <div class="stat-card"><span>Đã nhập điểm</span><strong id="statGraded">0</strong></div>
                     <div class="stat-card"><span>ĐTB lớp</span><strong id="statAvgGpa">0</strong></div>
                 </div>
-                <!-- 2 Bảng thống kê chi tiết phía dưới -->
                 <div class="workspace" style="margin-top:20px">
                     <div class="card table-card">
                         <h3 style="margin-bottom:15px">Phân loại học lực</h3>
@@ -176,7 +193,6 @@
         </main>
     </div>
 
-    <!-- HỘP THOẠI POPUP NHẬP ĐIỂM (MODAL) -->
     <div id="gradeModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -205,7 +221,6 @@
         </div>
     </div>
 
-    <!-- KẾT NỐI FILE ĐIỀU KHIỂN CHÍNH -->
     <script type="module" src="js/main.js"></script>
 </body>
 </html>
