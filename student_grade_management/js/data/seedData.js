@@ -3,7 +3,7 @@ import Storage from '../utils/storage.js';
 export function initSeedData() {
     if (!localStorage.getItem('users')) {
         Storage.set('users', [{
-            email: 'gvcn@gmail.com',
+            email: 'admin@gmail.com',
             password: '123',
             name: 'Nguyễn Quý Nhân',
             homeroomClass: '12A1'
