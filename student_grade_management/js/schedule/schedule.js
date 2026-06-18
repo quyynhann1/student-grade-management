@@ -1,3 +1,5 @@
+import Storage from '../utils/storage.js';
+
 // Dữ liệu Thời khóa biểu mặc định
 const defaultSchedule = {
     t2: ["Chào cờ", "Toán", "Toán", "Ngữ văn", "Tiếng Anh"],
@@ -8,16 +10,18 @@ const defaultSchedule = {
     t7: ["Sinh học", "Địa lý", "GDQP-AN", "Sinh hoạt lớp", "—"]
 };
 
+const KEY_SCHEDULE = 'school_schedule';
+
 const ScheduleManager = {
     // Lấy dữ liệu TKB từ localStorage, nếu chưa có thì lấy mặc định
     getSchedule() {
-        const data = localStorage.getItem('school_schedule');
+        const data = localStorage.getItem(KEY_SCHEDULE);
         return data ? JSON.parse(data) : defaultSchedule;
     },
 
     // Lưu dữ liệu TKB mới
     saveSchedule(newSchedule) {
-        localStorage.setItem('school_schedule', JSON.stringify(newSchedule));
+        Storage.set(KEY_SCHEDULE, newSchedule);
         return true;
     }
 };

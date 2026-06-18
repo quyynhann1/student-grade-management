@@ -13,7 +13,9 @@ const StudentManager = {
     create(studentObj) {
         const students = this.getAll();
         const newStudent = {
-            id: 'HS' + Date.now().toString().slice(-4),
+            // Dùng đúng mã học sinh mà giáo viên đã nhập trên form,
+            // không tự sinh mã khác (tránh sai lệch giữa form và dữ liệu lưu)
+            id: studentObj.id,
             name: studentObj.name,
             phone: studentObj.phone || '',
             classId: studentObj.classId

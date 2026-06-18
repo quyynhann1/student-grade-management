@@ -12,6 +12,12 @@ const GradeManager = {
             || { math: 0, literature: 0, english: 0 };
     },
 
+    // Kiểm tra học sinh đã được nhập điểm thật sự hay chưa
+    // (khác với getByStudentId, hàm này không trả về giá trị mặc định 0)
+    hasGrade(studentId) {
+        return this.getAll().some(g => g.studentId === studentId);
+    },
+
     saveGrade(studentId, grades) {
         const math = parseFloat(grades.math);
         const literature = parseFloat(grades.literature);

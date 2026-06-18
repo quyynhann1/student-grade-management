@@ -321,6 +321,7 @@ table tr:hover {
 .badge-rank.Khá { background-color: rgba(255, 193, 7, 0.1); color: #ff9f43; }
 .badge-rank.Trung-Bình, .badge-rank.Trung { background-color: rgba(108, 117, 125, 0.1); color: #6c757d; }
 .badge-rank.Yếu { background-color: rgba(220, 53, 69, 0.1); color: var(--danger); }
+.badge-rank.Chưa-có-điểm { background-color: rgba(108, 117, 125, 0.08); color: #adb5bd; font-style: italic; }
 
 /* Style cho Hộp thoại Popup (Modal) */
 .modal {
