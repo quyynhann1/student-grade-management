@@ -25,28 +25,17 @@ export const UIRenderer = {
 
         for (let i = 0; i < students.length; i++) {
             const student = students[i];
-            const graded = GradeManager.hasGrade(student.id);
             const grade = GradeManager.getByStudentId(student.id);
-
-            let scoreText, gpa, rank, safeRankClass;
-            if (graded) {
-                gpa = GradeManager.calculateGPA(grade.math, grade.literature, grade.english);
-                rank = GradeManager.getRank(parseFloat(gpa));
-                safeRankClass = this.getSafeRankClass(rank);
-                scoreText = `T: ${grade.math} | V: ${grade.literature} | A: ${grade.english}`;
-            } else {
-                gpa = '—';
-                rank = 'Chưa có điểm';
-                safeRankClass = this.getSafeRankClass(rank);
-                scoreText = '—';
-            }
+            const gpa = GradeManager.calculateGPA(grade.math, grade.literature, grade.english);
+            const rank = GradeManager.getRank(parseFloat(gpa));
+            const safeRankClass = this.getSafeRankClass(rank);
 
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td><strong>${student.id}</strong></td>
                 <td>${student.name}</td>
                 <td>${student.phone || '—'}</td>
-                <td>${scoreText}</td>
+                <td>T: ${grade.math} | V: ${grade.literature} | A: ${grade.english}</td>
                 <td><span class="badge-gpa">${gpa}</span></td>
                 <td><span class="badge-rank ${safeRankClass}">${rank}</span></td>
                 <td>
@@ -77,15 +66,27 @@ export const UIRenderer = {
         const currentClassId = classId || '12A1';
         const cls = ClassManager.getHomeroomClass(currentClassId);
 
-        const set = (id, val) => {
+        // Hàm phụ để gán giá trị vào ô input, tránh lặp code nhiều lần
+        function set(id, val) {
             const el = document.getElementById(id);
-            if (el) el.value = val || '';
-        };
+            if (el) {
+                el.value = val || '';
+            }
+        }
+
+        let className = 'Lớp ' + currentClassId;
+        let classGrade = '12';
+        let classYear = '2025 - 2026';
+        if (cls) {
+            if (cls.name) className = cls.name;
+            if (cls.grade) classGrade = cls.grade;
+            if (cls.schoolYear) classYear = cls.schoolYear;
+        }
 
         set('homeroomCode', currentClassId);
-        set('homeroomName', cls?.name || 'Lớp ' + currentClassId);
-        set('homeroomGrade', cls?.grade || '12');
-        set('homeroomYear', cls?.schoolYear || '2025 - 2026');
+        set('homeroomName', className);
+        set('homeroomGrade', classGrade);
+        set('homeroomYear', classYear);
 
         // Lấy sĩ số thực tế từ danh sách học sinh hiện tại
         const countEl = document.getElementById('homeroomCount');
@@ -112,31 +113,18 @@ export const UIRenderer = {
 
         for (let i = 0; i < students.length; i++) {
             const student = students[i];
-            const graded = GradeManager.hasGrade(student.id);
             const grade = GradeManager.getByStudentId(student.id);
-
-            let math, literature, english, gpa, rank, safeRankClass;
-            if (graded) {
-                math = grade.math;
-                literature = grade.literature;
-                english = grade.english;
-                gpa = GradeManager.calculateGPA(grade.math, grade.literature, grade.english);
-                rank = GradeManager.getRank(parseFloat(gpa));
-                safeRankClass = this.getSafeRankClass(rank);
-            } else {
-                math = literature = english = '—';
-                gpa = '—';
-                rank = 'Chưa có điểm';
-                safeRankClass = this.getSafeRankClass(rank);
-            }
+            const gpa = GradeManager.calculateGPA(grade.math, grade.literature, grade.english);
+            const rank = GradeManager.getRank(parseFloat(gpa));
+            const safeRankClass = this.getSafeRankClass(rank);
 
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td><strong>${student.id}</strong></td>
                 <td>${student.name}</td>
-                <td>${math}</td>
-                <td>${literature}</td>
-                <td>${english}</td>
+                <td>${grade.math}</td>
+                <td>${grade.literature}</td>
+                <td>${grade.english}</td>
                 <td><span class="badge-gpa">${gpa}</span></td>
                 <td><span class="badge-rank ${safeRankClass}">${rank}</span></td>
             `;
@@ -148,12 +136,16 @@ export const UIRenderer = {
     renderStatistics(homeroomClass) {
         const currentClass = homeroomClass || '12A1';
         const overview = Statistics.getOverview(currentClass);
-        const el = (id) => document.getElementById(id);
 
-        if (el('statStudents')) el('statStudents').textContent = overview.totalStudents || 0;
-        if (el('statHomeroom')) el('statHomeroom').textContent = overview.homeroomClass || currentClass;
-        if (el('statGraded')) el('statGraded').textContent = overview.totalGraded || 0;
-        if (el('statAvgGpa')) el('statAvgGpa').textContent = overview.averageGpa || '0.00';
+        const statStudentsEl = document.getElementById('statStudents');
+        const statHomeroomEl = document.getElementById('statHomeroom');
+        const statGradedEl = document.getElementById('statGraded');
+        const statAvgGpaEl = document.getElementById('statAvgGpa');
+
+        if (statStudentsEl) statStudentsEl.textContent = overview.totalStudents || 0;
+        if (statHomeroomEl) statHomeroomEl.textContent = overview.homeroomClass || currentClass;
+        if (statGradedEl) statGradedEl.textContent = overview.totalGraded || 0;
+        if (statAvgGpaEl) statAvgGpaEl.textContent = overview.averageGpa || '0.00';
 
         // Vẽ bảng số lượng phân loại học lực
         const rankBody = document.getElementById('rankTableBody');

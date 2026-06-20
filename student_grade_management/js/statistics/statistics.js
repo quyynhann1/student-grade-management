@@ -9,9 +9,9 @@ const Statistics = {
         const rankCounts = { 'Giỏi': 0, 'Khá': 0, 'Trung Bình': 0, 'Yếu': 0 };
 
         for (let i = 0; i < students.length; i++) {
-            const hasScore = GradeManager.hasGrade(students[i].id);
+            const grade = GradeManager.getByStudentId(students[i].id);
+            const hasScore = grade.math > 0 || grade.literature > 0 || grade.english > 0;
             if (hasScore) {
-                const grade = GradeManager.getByStudentId(students[i].id);
                 const gpa = parseFloat(GradeManager.calculateGPA(grade.math, grade.literature, grade.english));
                 totalGpa += gpa;
                 gradedCount++;
@@ -33,20 +33,25 @@ const Statistics = {
         };
     },
 
-    getTopStudents(limit = 5) {
+    getTopStudents(limit) {
+        // Nếu không truyền limit thì mặc định lấy 5 học sinh
+        if (!limit) {
+            limit = 5;
+        }
         const students = StudentManager.getAll();
         const ranked = [];
 
         for (let i = 0; i < students.length; i++) {
-            if (!GradeManager.hasGrade(students[i].id)) continue;
             const grade = GradeManager.getByStudentId(students[i].id);
             const gpa = parseFloat(GradeManager.calculateGPA(grade.math, grade.literature, grade.english));
-            ranked.push({
-                id: students[i].id,
-                name: students[i].name,
-                gpa,
-                rank: GradeManager.getRank(gpa)
-            });
+            if (gpa > 0) {
+                ranked.push({
+                    id: students[i].id,
+                    name: students[i].name,
+                    gpa,
+                    rank: GradeManager.getRank(gpa)
+                });
+            }
         }
 
         ranked.sort((a, b) => b.gpa - a.gpa);

@@ -39,8 +39,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!studentForm) return;
 
     const currentUser = Auth.getCurrentUser();
-    const teacherName = currentUser?.name || currentUser?.username || 'Nguyễn Quý Nhân';
-    const homeroomClass = currentUser?.homeroomClass || '12A1';
+    let teacherName = 'Nguyễn Quý Nhân';
+    let homeroomClass = '12A1';
+    if (currentUser) {
+        if (currentUser.name) {
+            teacherName = currentUser.name;
+        } else if (currentUser.username) {
+            teacherName = currentUser.username;
+        }
+        if (currentUser.homeroomClass) {
+            homeroomClass = currentUser.homeroomClass;
+        }
+    }
 
     // Cập nhật thông tin lên thanh tiêu đề và sidebar thanh điều hướng
     const welcomeTextEl = document.getElementById('welcomeText');

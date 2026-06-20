@@ -12,19 +12,18 @@ const GradeManager = {
             || { math: 0, literature: 0, english: 0 };
     },
 
-    // Kiểm tra học sinh đã được nhập điểm thật sự hay chưa
-    // (khác với getByStudentId, hàm này không trả về giá trị mặc định 0)
-    hasGrade(studentId) {
-        return this.getAll().some(g => g.studentId === studentId);
-    },
-
     saveGrade(studentId, grades) {
         const math = parseFloat(grades.math);
         const literature = parseFloat(grades.literature);
         const english = parseFloat(grades.english);
 
-        if ([math, literature, english].some(n => isNaN(n) || n < 0 || n > 10)) {
-            return false;
+        // Kiểm tra cả 3 điểm phải hợp lệ (là số và nằm trong khoảng 0-10)
+        const scores = [math, literature, english];
+        for (let i = 0; i < scores.length; i++) {
+            const n = scores[i];
+            if (isNaN(n) || n < 0 || n > 10) {
+                return false;
+            }
         }
 
         const allGrades = this.getAll();

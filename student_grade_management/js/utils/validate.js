@@ -7,7 +7,7 @@ export function validateEmail(email) {
         return { valid: false, message: 'Email không được để trống' };
     }
     const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!pattern.test(email)) {
+    if (!pattern.test(email.trim())) {
         return { valid: false, message: 'Email không đúng định dạng' };
     }
     return { valid: true, message: '' };
