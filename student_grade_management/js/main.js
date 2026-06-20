@@ -4,7 +4,7 @@ import StudentManager from './students/students.js';
 import ClassManager from './classes/classes.js';
 import GradeManager from './grades/grades.js';
 import { UIRenderer } from './ui/render.js';
-import { validateEmail, validatePassword, validateStudentForm, validateGradeForm, validateClassName, validateScore } from './utils/validate.js';
+import { validateEmail, validatePassword, validateStudentForm, validateGradeForm, validateScore } from './utils/validate.js';
 import ScheduleManager from './schedule/schedule.js';
 
 // Khởi tạo dữ liệu mẫu và kiểm tra quyền đăng nhập

@@ -52,13 +52,6 @@ export function validateScore(score) {
     return { valid: true, message: '' };
 }
 
-export function validateClassName(name) {
-    if (!name || name.trim().length < 2) {
-        return { valid: false, message: 'Tên lớp phải có ít nhất 2 ký tự' };
-    }
-    return { valid: true, message: '' };
-}
-
 export function validatePhone(phone) {
     if (!phone || phone.trim() === '') {
         return { valid: true, message: '' };
