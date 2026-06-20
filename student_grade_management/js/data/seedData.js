@@ -15,7 +15,7 @@ export function initSeedData() {
             id: '12A1',
             name: 'Lớp 12A1',
             grade: '12',
-            schoolYear: '2025 - 2026'
+            schoolYear: '2026 - 2027'
         }]);
     }
 
