@@ -26,9 +26,18 @@ export const UIRenderer = {
         for (let i = 0; i < students.length; i++) {
             const student = students[i];
             const grade = GradeManager.getByStudentId(student.id);
-            const gpa = GradeManager.calculateGPA(grade.math, grade.literature, grade.english);
-            const rank = GradeManager.getRank(parseFloat(gpa));
-            const safeRankClass = this.getSafeRankClass(rank);
+
+            let gpaDisplay = '—';
+            let rankDisplay = 'Chưa có điểm';
+            let safeRankClass = this.getSafeRankClass('Chưa có điểm');
+
+            if (GradeManager.hasGrade(grade)) {
+                const gpa = GradeManager.calculateGPA(grade.math, grade.literature, grade.english);
+                const rank = GradeManager.getRank(parseFloat(gpa));
+                gpaDisplay = gpa;
+                rankDisplay = rank;
+                safeRankClass = this.getSafeRankClass(rank);
+            }
 
             const tr = document.createElement('tr');
             tr.innerHTML = `
@@ -36,8 +45,8 @@ export const UIRenderer = {
                 <td>${student.name}</td>
                 <td>${student.phone || '—'}</td>
                 <td>T: ${grade.math} | V: ${grade.literature} | A: ${grade.english}</td>
-                <td><span class="badge-gpa">${gpa}</span></td>
-                <td><span class="badge-rank ${safeRankClass}">${rank}</span></td>
+                <td><span class="badge-gpa">${gpaDisplay}</span></td>
+                <td><span class="badge-rank ${safeRankClass}">${rankDisplay}</span></td>
                 <td>
                     <div class="action-btns">
                         <button class="btn-table-grade" data-id="${student.id}">Điểm</button>
@@ -114,9 +123,18 @@ export const UIRenderer = {
         for (let i = 0; i < students.length; i++) {
             const student = students[i];
             const grade = GradeManager.getByStudentId(student.id);
-            const gpa = GradeManager.calculateGPA(grade.math, grade.literature, grade.english);
-            const rank = GradeManager.getRank(parseFloat(gpa));
-            const safeRankClass = this.getSafeRankClass(rank);
+
+            let gpaDisplay = '—';
+            let rankDisplay = 'Chưa có điểm';
+            let safeRankClass = this.getSafeRankClass('Chưa có điểm');
+
+            if (GradeManager.hasGrade(grade)) {
+                const gpa = GradeManager.calculateGPA(grade.math, grade.literature, grade.english);
+                const rank = GradeManager.getRank(parseFloat(gpa));
+                gpaDisplay = gpa;
+                rankDisplay = rank;
+                safeRankClass = this.getSafeRankClass(rank);
+            }
 
             const tr = document.createElement('tr');
             tr.innerHTML = `
@@ -125,8 +143,8 @@ export const UIRenderer = {
                 <td>${grade.math}</td>
                 <td>${grade.literature}</td>
                 <td>${grade.english}</td>
-                <td><span class="badge-gpa">${gpa}</span></td>
-                <td><span class="badge-rank ${safeRankClass}">${rank}</span></td>
+                <td><span class="badge-gpa">${gpaDisplay}</span></td>
+                <td><span class="badge-rank ${safeRankClass}">${rankDisplay}</span></td>
             `;
             tableBody.appendChild(tr);
         }

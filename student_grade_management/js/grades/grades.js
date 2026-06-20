@@ -44,6 +44,15 @@ const GradeManager = {
         return gpa.toFixed(2);
     },
 
+    // Hàm mới: kiểm tra học sinh đã được nhập điểm hay chưa
+    // (chưa nhập thì cả 3 môn đều bằng 0, không nên tính là "Yếu")
+    hasGrade(grade) {
+        if (grade.math > 0 || grade.literature > 0 || grade.english > 0) {
+            return true;
+        }
+        return false;
+    },
+
     getRank(gpa) {
         if (gpa >= 8.0) return 'Giỏi';
         if (gpa >= 6.5) return 'Khá';
